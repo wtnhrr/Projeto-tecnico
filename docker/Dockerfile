@@ -6,7 +6,6 @@ LABEL description="Container tomcat com jenkins e jolokia"
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 RUN cp -r /usr/local/tomcat/webapps.dist/manager /usr/local/tomcat/webapps/ && \
-    cp -r /usr/local/tomcat/webapps.dist/host-manager /usr/local/tomcat/webapps/ && \
     cp -r /usr/local/tomcat/webapps.dist/ROOT /usr/local/tomcat/webapps/
 
 COPY conf/tomcat-users.xml /usr/local/tomcat/conf/
