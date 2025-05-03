@@ -25,25 +25,6 @@ kubectl version --client
 
 ---
 
-### Configuração do context.xml e tomcat-users.xml
-
-Antes de construir a imagem Docker, é importante revisar e ajustar os arquivos `context.xml` e `tomcat-users.xml` localizados no diretório `docker/conf/`.
-
-#### context.xml
-O arquivo `context.xml` configura o contexto do Tomcat. Ele inclui definições como:
-- **`antiResourceLocking`**: Define se os recursos devem ser bloqueados durante o uso. Configurado como `false`.
-- **`privileged`**: Permite operações privilegiadas, configurado como `true`.
-- **`CookieProcessor`**: Configura cookies para o padrão RFC6265 com `sameSiteCookies` definido como `strict`.
-- **`Manager`**: Filtra atributos de sessão para maior segurança.
-
-#### tomcat-users.xml
-O arquivo `tomcat-users.xml` gerencia usuários e permissões no Tomcat. Ele inclui:
-- **Roles (Funções)**: Permissões como `manager-gui` e `admin-gui`.
-- **Usuários**: Configurações de usuários com nome, senha e funções associadas. **Recomenda-se alterar as credenciais padrão antes de usar em produção.**
-
-Certifique-se de ajustar esses arquivos conforme necessário antes de prosseguir com a construção da imagem Docker.
-
----
 ## Instalação do Minikube
 
 ### Download do binário
@@ -61,29 +42,84 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-a
 sudo usermod -aG docker $USER && newgrp docker
 ```
 
-### Inicialização do Minikube
-```bash
-minikube start
-```
-
 ### Ativação do ambiente Docker do Minikube
 ```bash
 eval $(minikube docker-env)
 ```
 
+### Inicialização do Minikube
+```bash
+minikube start --drive=docker
+```
+
 ---
 
-## Recuperação da Senha Inicial do Jenkins
+## Configuração do context.xml e tomcat-users.xml
 
-### Comando para obter o nome do pod do Jenkins
+Antes de construir a imagem Docker, é importante revisar e ajustar os arquivos `context.xml` e `tomcat-users.xml` localizados no diretório `docker/conf/`.
+
+### context.xml
+O arquivo `context.xml` configura o contexto do Tomcat. Ele inclui definições como:
+- **`antiResourceLocking`**: Define se os recursos devem ser bloqueados durante o uso. Configurado como `false`.
+- **`privileged`**: Permite operações privilegiadas, configurado como `true`.
+- **`CookieProcessor`**: Configura cookies para o padrão RFC6265 com `sameSiteCookies` definido como `strict`.
+- **`Manager`**: Filtra atributos de sessão para maior segurança.
+
+### tomcat-users.xml
+O arquivo `tomcat-users.xml` gerencia usuários e permissões no Tomcat. Ele inclui:
+- **Roles (Funções)**: Permissões como `manager-gui` e `admin-gui`.
+- **Usuários**: Configurações de usuários com nome, senha e funções associadas. **Recomenda-se alterar as credenciais padrão antes de usar em produção.**
+
+Certifique-se de ajustar esses arquivos conforme necessário antes de prosseguir com a construção da imagem Docker.
+
+---
+
+## Build Imagem
+
+### Construindo imagem Dockerfile
+
+Navegue para o diretório docker.
 ```bash
-POD_NAME=$(kubectl get pods -n jenkins-monitoring -o jsonpath="{.items[0].metadata.name}")
+docker build -t [nome_imagem] .
 ```
 
-### Comando para exibir a senha inicial do Jenkins
+
+## Kubernetes deployment
+
+### Navegue para o diretório k8s
 ```bash
-kubectl exec -it $POD_NAME -n jenkins-monitoring -- cat /root/.jenkins/secrets/initialAdminPassword
+kubectl apply -f namespace.yml
+kubectl apply -f deployment.yml
+kubectl apply -f service.yml
 ```
+
+### Verificar os pods
+```bash
+kubectl get pods -n jenkins-monitoring
+```
+
+### Verificar url
+```bash
+minikube service jenkins-service -n jenkins-monitoring --url
+```
+
+---
+
+## Aplicações do projeto
+
+### Tomcat server
+[ip:30000/]
+
+### Jenkins
+[ip:30000/jenkins]
+
+### Jenkins password comando para facilitar
+```bash
+kubectl exec -it jenkins-deployment-8557785d48-6gw2p -n jenkins-monitoring -- cat /root/.jenkins/secrets/initialAdminPassword
+```
+
+### Jolokia
+[ip:30000/jolokia]
 
 ---
 
