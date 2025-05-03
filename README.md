@@ -25,6 +25,25 @@ kubectl version --client
 
 ---
 
+### Configuração do context.xml e tomcat-users.xml
+
+Antes de construir a imagem Docker, é importante revisar e ajustar os arquivos `context.xml` e `tomcat-users.xml` localizados no diretório `docker/conf/`.
+
+#### context.xml
+O arquivo `context.xml` configura o contexto do Tomcat. Ele inclui definições como:
+- **`antiResourceLocking`**: Define se os recursos devem ser bloqueados durante o uso. Configurado como `false`.
+- **`privileged`**: Permite operações privilegiadas, configurado como `true`.
+- **`CookieProcessor`**: Configura cookies para o padrão RFC6265 com `sameSiteCookies` definido como `strict`.
+- **`Manager`**: Filtra atributos de sessão para maior segurança.
+
+#### tomcat-users.xml
+O arquivo `tomcat-users.xml` gerencia usuários e permissões no Tomcat. Ele inclui:
+- **Roles (Funções)**: Permissões como `manager-gui` e `admin-gui`.
+- **Usuários**: Configurações de usuários com nome, senha e funções associadas. **Recomenda-se alterar as credenciais padrão antes de usar em produção.**
+
+Certifique-se de ajustar esses arquivos conforme necessário antes de prosseguir com a construção da imagem Docker.
+
+---
 ## Instalação do Minikube
 
 ### Download do binário
