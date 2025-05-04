@@ -44,3 +44,10 @@ spec:
           periodSeconds: 20
           timeoutSeconds: 10
           failureThreshold: 5
+      - name: jolokia-exporter
+        image: sscaling/jmx-prometheus-exporter
+        env:
+          - name: JOLOKIA_URL
+            value: http://localhost:8080/jolokia
+        ports:
+          - containerPort: 8081
