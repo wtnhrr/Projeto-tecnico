@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jolokia-exporter
+  namespace: jenkins-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jolokia-exporter
+  template:
+    metadata:
+      labels:
+        app: jolokia-exporter
+    spec:
+      containers:
+        - name: jolokia-exporter
+          image: dracoblue/jolokia-metrics-exporter
+          ports:
+            - containerPort: 3000
+          env:
+            - name: JOLOKIA_URL
+              value: "http://jenkins-service.jenkins-monitoring.svc.cluster.local:8080/jolokia"
+            - name: USERNAME
+              value: "admin"
+            - name: PASSWORD
+              value: "admin"
+            - name: CONFIG_YML
+              value: "/usr/src/app/config/config.yaml"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/src/app/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: jolokia-exporter-config

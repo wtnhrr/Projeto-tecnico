@@ -1,3 +1,7 @@
+kubectl apply -f configmap-jolokia.yml
+kubectl apply -f jolokia-deployment.yml
+kubectl apply -f jolokia-service.yml
+
 # Documentação do Projeto Kubernetes com Jenkins
 
 ## Instalação do Kubernetes (kubectl)

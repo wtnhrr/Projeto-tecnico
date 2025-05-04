@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jolokia-exporter
+  namespace: jenkins-monitoring
+spec:
+  ports:
+  - name: metrics
+    port: 9442
+    targetPort: 3000
+  selector:
+    app: jolokia-exporter
