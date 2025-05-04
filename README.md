@@ -11,7 +11,7 @@ Para este projeto utilizaremos minikube para criar um cluster localmente. Lembre
 - - -
 ### Passo a Passo para execução do projeto
 
-#### Instalar as depêndicas, utilize o script.sh
+#### Instalar as depêndecias, utilize o script.sh
 De Permissão:
 ```bash
 chmod +x script.sh
