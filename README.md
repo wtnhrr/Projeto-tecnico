@@ -48,7 +48,7 @@ eval $(minikube docker-env)
 ```bash
 docker images
 ```
-Deverá aparecer as imagems várias funcionais do kubernetes
+Deverá aparecer várias imagems funcionais do kubernetes
 
 ---
 
