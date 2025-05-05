@@ -165,6 +165,16 @@ make pods
 make url
 ```
 
+#### Limpar pods/service/deployment
+```bash
+make clean
+```
+
+#### Excluir cluster
+```bash
+make del
+```
+
 #### Minikube delete
 ```bash
 make del
