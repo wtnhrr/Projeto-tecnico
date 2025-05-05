@@ -43,7 +43,7 @@ url:
 	minikube service prometheus -n jenkins-monitoring --url
 
 # Prometheus build
-prometheus:
+prometheus-build:
 	kubectl apply -f $(PROMETHEUS_DIR)/config-map.yml
 	kubectl apply -f $(PROMETHEUS_DIR)/prometheus-deployment.yml
 	kubectl apply -f $(PROMETHEUS_DIR)/prometheus-service.yml
