@@ -19,35 +19,70 @@ spec:
       - name: jenkins-container
         image: jenkins-jolokia:latest
         imagePullPolicy: Never
+        env:
+          - name: CATALINA_OPTS
+            value: "-javaagent:/usr/local/tomcat/prometheus-agent.jar=8081:/usr/local/tomcat/conf/prometheus-config.yaml"
         ports:
         - containerPort: 8080
+        - containerPort: 8081
         resources:
           limits:
+            memory: "1536Mi"
+            cpu: "800m"
+          requests:
             memory: "1024Mi"
             cpu: "500m"
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
         readinessProbe:
           httpGet:
             path: /jenkins/login
             port: 8080
-          initialDelaySeconds: 90
-          periodSeconds: 10
-          timeoutSeconds: 10
-          failureThreshold: 10
+          initialDelaySeconds: 60
         livenessProbe:
           httpGet:
             path: /jenkins/login
             port: 8080
           initialDelaySeconds: 120
-          periodSeconds: 20
-          timeoutSeconds: 10
-          failureThreshold: 5
-      - name: jolokia-exporter
-        image: sscaling/jmx-prometheus-exporter
+      
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+  namespace: jenkins-monitoring
+  labels:
+    app: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins-container
+        image: jenkins-jolokia:latest
+        imagePullPolicy: Never
         env:
-          - name: JOLOKIA_URL
-            value: http://localhost:8080/jolokia
+          - name: CATALINA_OPTS
+            value: "-javaagent:/usr/local/tomcat/prometheus-agent.jar=8081:/usr/local/tomcat/conf/prometheus-config.yaml"
         ports:
-          - containerPort: 8081
+        - containerPort: 8080
+        - containerPort: 8081
+        resources:
+          limits:
+            memory: "1536Mi"
+            cpu: "800m"
+          requests:
+            memory: "1024Mi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /jenkins/login
+            port: 8080
+          initialDelaySeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /jenkins/login
+            port: 8080
+          initialDelaySeconds: 120

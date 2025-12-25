@@ -28,6 +28,7 @@ k8s-deploy:
 	kubectl apply -f $(K8S_DIR)/namespace.yml
 	kubectl apply -f $(K8S_DIR)/deployment.yml
 	kubectl apply -f $(K8S_DIR)/service.yml
+	kubectl apply -f $(K8S_DIR)/export-service.yml
 	@echo "Arquivos de Kubernetes aplicados com sucesso"
 
 # Verificar status dos pods
